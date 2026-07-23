@@ -1,0 +1,165 @@
+[Autoencoder] Using device: cuda
+[NIDSPredictor] Loading models...
+[NIDSPredictor] Ready.
+  XGBoost classes     : ['BENIGN', 'Botnet', 'BruteForce', 'DDoS', 'DoS', 'Infiltration', 'WebAttack']
+  Infiltration thresh : 0.86
+  AE threshold        : 14.787706
+[FeatureExtractor] Loaded 42 features
+============================================================
+PHASE 6 — Real-Time Inference
+============================================================
+Showing non-NORMAL alerts only.
+Generate attack traffic to test:
+  nmap -sS <target>           → BruteForce/PortScan-like
+  hping3 -S --flood -p 80 <t> → DoS-like
+Press Ctrl+C to stop.
+
+[Capture] Interface: 9  Filter: 'ip'
+[WindowAssembler] Running — window=10.0s  stride=2.0s
+[Capture] Received tcp packet (1 total)
+[Capture] Received tcp packet (2 total)
+[Capture] Received tcp packet (3 total)
+[Capture] Received tcp packet (4 total)
+[Capture] Received tcp packet (5 total)
+[Capture] Received tcp packet (6 total)
+[Capture] Received tcp packet (7 total)
+[Capture] Received tcp packet (8 total)
+
+============================================================
+[13:18:55]  LOW         severity=10.6
+  Flow     : 127.0.0.1:50377 → 127.0.0.1:55797 (TCP)
+  Label    : Benign
+  XGBoost  : BENIGN (conf=0.994)
+  AE error : 7.862870 (threshold=14.787706  anomaly=False)
+[Capture] Received tcp packet (9 total)
+[Capture] Received tcp packet (10 total)
+[Capture] Received tcp packet (11 total)
+[Capture] Received tcp packet (12 total)
+[Capture] Received tcp packet (13 total)
+[Capture] Received tcp packet (14 total)
+[Capture] Received tcp packet (15 total)
+[Capture] Received tcp packet (16 total)
+[Capture] Received tcp packet (17 total)
+[Capture] Received tcp packet (18 total)
+[Capture] Received tcp packet (19 total)
+[Capture] Received tcp packet (20 total)
+[Capture] Received tcp packet (21 total)
+[Capture] Received tcp packet (22 total)
+[Capture] Received tcp packet (23 total)
+[Capture] Received tcp packet (24 total)
+[Capture] Received tcp packet (25 total)
+[Capture] Received tcp packet (26 total)
+[Capture] Received tcp packet (27 total)
+[Capture] Received tcp packet (28 total)
+[Capture] Received tcp packet (29 total)
+[Capture] Received tcp packet (30 total)
+[Capture] Received tcp packet (31 total)
+[Capture] Received tcp packet (32 total)
+[Capture] Received tcp packet (33 total)
+[Capture] Received tcp packet (34 total)
+
+============================================================
+[13:18:57]  MEDIUM      severity=40.0
+  Flow     : 127.0.0.1:50377 → 127.0.0.1:55797 (TCP)
+  Label    : Anomaly (Unknown)
+  XGBoost  : BENIGN (conf=0.995)
+  AE error : 71.594765 (threshold=14.787706  anomaly=True)
+
+============================================================
+[13:18:57]  LOW         severity=10.7
+  Flow     : 127.0.0.1:58751 → 127.0.0.1:60175 (TCP)
+  Label    : Benign
+  XGBoost  : BENIGN (conf=0.993)
+  AE error : 7.907290 (threshold=14.787706  anomaly=False)
+[Capture] Received tcp packet (35 total)
+[Capture] Received tcp packet (36 total)
+[Capture] Received tcp packet (37 total)
+[Capture] Received tcp packet (38 total)
+[Capture] Received tcp packet (39 total)
+[Capture] Received tcp packet (40 total)
+[Capture] Received tcp packet (41 total)
+[Capture] Received tcp packet (42 total)
+[Capture] Received tcp packet (43 total)
+[Capture] Received tcp packet (44 total)
+[Capture] Received tcp packet (45 total)
+[Capture] Received tcp packet (46 total)
+[Capture] Received tcp packet (47 total)
+[Capture] Received tcp packet (48 total)
+[Capture] Received tcp packet (49 total)
+[Capture] Received tcp packet (50 total)
+[Capture] Received tcp packet (51 total)
+[Capture] Received tcp packet (52 total)
+[Capture] Received tcp packet (53 total)
+[Capture] Received tcp packet (54 total)
+
+============================================================
+[13:18:59]  MEDIUM      severity=40.0
+  Flow     : 127.0.0.1:50377 → 127.0.0.1:55797 (TCP)
+  Label    : Anomaly (Unknown)
+  XGBoost  : BENIGN (conf=0.997)
+  AE error : 201.575195 (threshold=14.787706  anomaly=True)
+
+============================================================
+[13:18:59]  LOW         severity=10.7
+  Flow     : 127.0.0.1:58751 → 127.0.0.1:60175 (TCP)
+  Label    : Benign
+  XGBoost  : BENIGN (conf=0.993)
+  AE error : 7.907290 (threshold=14.787706  anomaly=False)
+[Capture] Received tcp packet (55 total)
+[Capture] Received tcp packet (56 total)
+[Capture] Received tcp packet (57 total)
+[Capture] Received tcp packet (58 total)
+[Capture] Received tcp packet (59 total)
+[Capture] Received tcp packet (60 total)
+[Capture] Received tcp packet (61 total)
+[Capture] Received tcp packet (62 total)
+[Capture] Received tcp packet (63 total)
+[Capture] Received tcp packet (64 total)
+[Capture] Received tcp packet (65 total)
+[Capture] Received tcp packet (66 total)
+[Capture] Received tcp packet (67 total)
+[Capture] Received tcp packet (68 total)
+[Capture] Received tcp packet (69 total)
+[Capture] Received tcp packet (70 total)
+[Capture] Received tcp packet (71 total)
+[Capture] Received tcp packet (72 total)
+[Capture] Received tcp packet (73 total)
+[Capture] Received tcp packet (74 total)
+[Capture] Received tcp packet (75 total)
+[Capture] Received tcp packet (76 total)
+
+============================================================
+[13:19:01]  MEDIUM      severity=40.0
+  Flow     : 127.0.0.1:50377 → 127.0.0.1:55797 (TCP)
+  Label    : Anomaly (Unknown)
+  XGBoost  : BENIGN (conf=0.995)
+  AE error : 397.785431 (threshold=14.787706  anomaly=True)
+
+============================================================
+[13:19:01]  LOW         severity=10.7
+  Flow     : 127.0.0.1:58751 → 127.0.0.1:60175 (TCP)
+  Label    : Benign
+  XGBoost  : BENIGN (conf=0.993)
+  AE error : 7.907290 (threshold=14.787706  anomaly=False)
+[Capture] Received tcp packet (77 total)
+[Capture] Received tcp packet (78 total)
+[Capture] Received tcp packet (79 total)
+[Capture] Received tcp packet (80 total)
+[Capture] Received tcp packet (81 total)
+[Capture] Received tcp packet (82 total)
+[Capture] Received tcp packet (83 total)
+[Capture] Received tcp packet (84 total)
+[Capture] Received tcp packet (85 total)
+[Capture] Received tcp packet (86 total)
+[Capture] Received tcp packet (87 total)
+[Capture] Received tcp packet (88 total)
+[Capture] Received tcp packet (89 total)
+[Capture] Received tcp packet (90 total)
+[Capture] Received tcp packet (91 total)
+[Capture] Received tcp packet (92 total)
+[Capture] Received tcp packet (93 total)
+[Capture] Received tcp packet (94 total)
+[Capture] Received tcp packet (95 total)
+[Capture] Received tcp packet (96 total)
+[Capture] Received tcp packet (97 total)
+[Capture] Received tcp packet (98 total)

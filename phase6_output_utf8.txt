@@ -1,0 +1,88 @@
+[Autoencoder] Using device: cuda
+[NIDSPredictor] Loading models...
+[NIDSPredictor] Ready.
+  XGBoost classes     : ['BENIGN', 'Botnet', 'BruteForce', 'DDoS', 'DoS', 'Infiltration', 'WebAttack']
+  Infiltration thresh : 0.86
+  AE threshold        : 14.787706
+[FeatureExtractor] Loaded 42 features
+============================================================
+PHASE 6 ΓÇö Real-Time Inference
+============================================================
+Showing non-NORMAL alerts only.
+Generate attack traffic to test:
+  nmap -sS <target>           ΓåÆ BruteForce/PortScan-like
+  hping3 -S --flood -p 80 <t> ΓåÆ DoS-like
+Press Ctrl+C to stop.
+
+[Capture] Interface: 5  Filter: 'ip'
+[WindowAssembler] Running ΓÇö window=10.0s  stride=2.0s
+[Capture] Received udp packet (1 total)
+[Capture] Received udp packet (2 total)
+[Capture] Received udp packet (3 total)
+[Capture] Received udp packet (4 total)
+[Capture] Received udp packet (5 total)
+[Capture] Received udp packet (6 total)
+[Capture] Received udp packet (7 total)
+[Capture] Received udp packet (8 total)
+[Capture] Received udp packet (9 total)
+[Capture] Received udp packet (10 total)
+[Capture] Received udp packet (11 total)
+[Capture] Received udp packet (12 total)
+[Capture] Received udp packet (13 total)
+[Capture] Received udp packet (14 total)
+[Capture] Received udp packet (15 total)
+[Capture] Received udp packet (16 total)
+[Capture] Received tcp packet (17 total)
+[Capture] Received tcp packet (18 total)
+[Capture] Received tcp packet (19 total)
+[Capture] Received udp packet (20 total)
+[Capture] Received udp packet (21 total)
+[Capture] Received udp packet (22 total)
+[Capture] Received udp packet (23 total)
+[Capture] Received udp packet (24 total)
+[Capture] Received udp packet (25 total)
+[Capture] Received udp packet (26 total)
+[Capture] Received udp packet (27 total)
+[Capture] Received udp packet (28 total)
+[Capture] Received udp packet (29 total)
+[Capture] Received udp packet (30 total)
+[Capture] Received udp packet (31 total)
+[Capture] Received udp packet (32 total)
+[Capture] Received udp packet (33 total)
+[Capture] Received udp packet (34 total)
+[Capture] Received udp packet (35 total)
+[Capture] Received udp packet (36 total)
+[Capture] Received udp packet (37 total)
+[Capture] Received udp packet (38 total)
+[Capture] Received udp packet (39 total)
+[Capture] Received udp packet (40 total)
+[Capture] Received udp packet (41 total)
+[Capture] Received udp packet (42 total)
+[Capture] Received udp packet (43 total)
+[Capture] Received udp packet (44 total)
+[Capture] Received udp packet (45 total)
+[Capture] Received udp packet (46 total)
+[Capture] Received udp packet (47 total)
+[Capture] Received udp packet (48 total)
+[Capture] Received udp packet (49 total)
+[Capture] Received udp packet (50 total)
+[Capture] Received udp packet (51 total)
+[Capture] Received udp packet (52 total)
+[Capture] Received udp packet (53 total)
+[Capture] Received udp packet (54 total)
+[Capture] Received udp packet (55 total)
+[Capture] Received udp packet (56 total)
+[Capture] Received udp packet (57 total)
+[Capture] Received udp packet (58 total)
+[Capture] Received udp packet (59 total)
+[Capture] Received udp packet (60 total)
+[Capture] Received udp packet (61 total)
+[Capture] Received udp packet (62 total)
+[Capture] Received udp packet (63 total)
+[Capture] Received udp packet (64 total)
+[Capture] Received udp packet (65 total)
+[Capture] Received udp packet (66 total)
+[Capture] Received udp packet (67 total)
+[Capture] Received udp packet (68 total)
+[Capture] Received tcp packet (69 total)
+[Capture] Received tcp packet (70 total)
