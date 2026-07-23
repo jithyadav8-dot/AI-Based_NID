@@ -10,6 +10,7 @@ env/
 CICD2017/
 processed/
 results/
+raw/
 models/*.pkl
 models/*.json
 
