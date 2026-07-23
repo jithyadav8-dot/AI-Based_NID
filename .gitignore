@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+.pytest_cache/
+.vscode/
+
+# Datasets / Large files
+CICD2017/
+processed/
+results/
+models/*.pkl
+models/*.json
+
+# Logs
+*.log
