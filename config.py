@@ -11,3 +11,4 @@ AE_BYPASS_TCP      = {53}                 # DNS-over-TCP
 API_HOST           = "0.0.0.0"
 API_PORT           = 8000
 MAX_ALERT_STORE    = 1000      # alerts kept in memory
+DEDUP_WINDOW_SECONDS = 60.0   # collapse repeated detections within this window (seconds)

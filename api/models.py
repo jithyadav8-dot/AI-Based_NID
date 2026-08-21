@@ -22,6 +22,10 @@ class AlertSchema(BaseModel):
     severity:         float
     level:            str
     label:            str
+    # ── Deduplication / event-collapsing fields ──────────────────
+    count:            int   = 1      # how many times this event repeated
+    first_seen:       float = 0.0   # unix ts of first occurrence
+    last_seen:        float = 0.0   # unix ts of most-recent repeat
 
 
 class AlertsListSchema(BaseModel):

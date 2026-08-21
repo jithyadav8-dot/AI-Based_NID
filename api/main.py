@@ -5,7 +5,7 @@ import json
 import time
 from collections import defaultdict, deque
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,12 +39,31 @@ pipeline_state = {
     "status":      "starting",
 }
 
-# ── Alert store ───────────────────────────────────────────────────
-from config import MAX_ALERT_STORE
+# ── Alert store + deduplication state ────────────────────────
+from config import MAX_ALERT_STORE, DEDUP_WINDOW_SECONDS
 
 alert_store:    deque  = deque(maxlen=MAX_ALERT_STORE)
 alert_id_ctr:   int    = 0
 alert_counts:   dict   = defaultdict(int)
+
+# Deduplication index: (src_ip, dst_ip, label, level) → alert record dict
+# Entries expire after DEDUP_WINDOW_SECONDS of silence.
+dedup_index: dict = {}
+
+
+def _dedup_key(record: dict) -> Tuple[str, str, str, str]:
+    """Returns the grouping key for a record."""
+    return (record["src_ip"], record["dst_ip"], record["label"], record["level"])
+
+
+def _evict_stale_dedup(now: float) -> None:
+    """Remove dedup entries whose last_seen is older than DEDUP_WINDOW_SECONDS."""
+    stale = [
+        k for k, rec in dedup_index.items()
+        if now - rec["last_seen"] > DEDUP_WINDOW_SECONDS
+    ]
+    for k in stale:
+        del dedup_index[k]
 
 
 # ── WebSocket connection manager ──────────────────────────────────
@@ -92,15 +111,28 @@ async def on_alert(alert: Alert):
     Entry point from the inference pipeline into the API layer.
     Called for every window regardless of level so stats stay accurate.
     Only non-NORMAL alerts are stored and broadcast to save memory.
+
+    Deduplication / event-collapsing:
+      If a matching event (same src_ip, dst_ip, label, level) was seen
+      within DEDUP_WINDOW_SECONDS, the existing record is updated in-place
+      (count++, last_seen refreshed, severity/ae_error/confidence updated
+      with latest values) and a "_type": "update" message is broadcast so
+      the dashboard can increment counters without adding a new row.
+      Otherwise, a brand-new "_type": "alert" event is created.
     """
     global alert_id_ctr
 
+    now = time.time()
     alert_counts[alert.level] += 1
     alert_counts["total"]     += 1
 
     if alert.level == "NORMAL":
         return
 
+    # Expire stale dedup entries so the index doesn't grow unboundedly
+    _evict_stale_dedup(now)
+
+    # Build a provisional record (needed for both new and update paths)
     alert_id_ctr += 1
 
     record = {
@@ -121,11 +153,41 @@ async def on_alert(alert: Alert):
         "severity":       round(alert.severity, 2),
         "level":          alert.level,
         "label":          alert.label,
+        # dedup fields ─ populated below
+        "count":          1,
+        "first_seen":     alert.timestamp,
+        "last_seen":      alert.timestamp,
         "_type":          "alert",
     }
 
-    alert_store.appendleft(record)
-    await manager.broadcast(record)
+    key = _dedup_key(record)
+    existing = dedup_index.get(key)
+
+    if existing is not None:
+        # ── Repeated event: update in-place, do NOT add a second row ──
+        # Roll back the unused alert_id_ctr increment
+        alert_id_ctr -= 1
+
+        existing["count"]          += 1
+        existing["last_seen"]       = alert.timestamp
+        existing["n_packets"]      += alert.n_packets
+        # Keep the *highest* severity / confidence seen so far
+        existing["severity"]        = round(
+            max(existing["severity"], alert.severity), 2)
+        existing["xgb_confidence"]  = round(
+            max(existing["xgb_confidence"], alert.xgb_confidence), 4)
+        existing["ae_error"]        = round(
+            max(existing["ae_error"], alert.ae_error), 6)
+        # Propagate anomaly flag if any repetition triggered it
+        existing["ae_is_anomaly"]   = existing["ae_is_anomaly"] or alert.ae_is_anomaly
+
+        update_msg = {**existing, "_type": "update"}
+        await manager.broadcast(update_msg)
+    else:
+        # ── New event: store and broadcast as normal ──
+        dedup_index[key] = record
+        alert_store.appendleft(record)
+        await manager.broadcast(record)
 
 
 # ── REST: GET /alerts ─────────────────────────────────────────────
@@ -206,15 +268,44 @@ def get_status():
     }
 
 
-# ── REST: DELETE /alerts ──────────────────────────────────────────
+# ── REST: DELETE /alerts ───────────────────────────────
 @app.delete("/alerts")
 def clear_alerts():
-    """Clears the in-memory alert store. Useful for demo resets."""
+    """Clears the in-memory alert store and dedup index. Useful for demo resets."""
     global alert_id_ctr
     alert_store.clear()
     alert_counts.clear()
+    dedup_index.clear()
     alert_id_ctr = 0
     return {"cleared": True}
+
+
+# ── REST: GET /alerts/dedup ────────────────────────────
+@app.get("/alerts/dedup")
+def get_dedup_stats():
+    """
+    Returns active deduplication groups (events that have been
+    collapsed) along with their current repeat counts.
+    Useful for debugging and dashboard summaries.
+    """
+    now = time.time()
+    groups = [
+        {
+            "id":         rec["id"],
+            "src_ip":     rec["src_ip"],
+            "dst_ip":     rec["dst_ip"],
+            "label":      rec["label"],
+            "level":      rec["level"],
+            "count":      rec["count"],
+            "first_seen": rec["first_seen"],
+            "last_seen":  rec["last_seen"],
+            "age_seconds": round(now - rec["first_seen"], 1),
+        }
+        for rec in dedup_index.values()
+    ]
+    # Sort by repeat count descending so the noisiest source is at the top
+    groups.sort(key=lambda g: g["count"], reverse=True)
+    return {"active_groups": len(groups), "groups": groups}
 
 
 # ── WebSocket: /ws/alerts ─────────────────────────────────────────
