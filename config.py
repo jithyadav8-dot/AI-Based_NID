@@ -2,7 +2,7 @@
 # Single place to change runtime settings.
 # Every script imports from here — no more hardcoded interface numbers.
 
-CAPTURE_INTERFACE  = "5"       # ← Wi-Fi interface
+CAPTURE_INTERFACE  = "9"       # ← Loopback (for scan traffic generation)
 BPF_FILTER         = "ip"
 WINDOW_SIZE        = 10.0      # seconds
 STRIDE             = 2.0       # seconds

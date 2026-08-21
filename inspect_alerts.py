@@ -35,14 +35,14 @@ total_scored = stats.get("windows_scored", 0)
 for level in ["CRITICAL", "HIGH", "MEDIUM", "LOW"]:
     n   = level_counts.get(level, 0)
     pct = n / total_scored * 100 if total_scored else 0
-    bar = "█" * int(pct * 2)
+    bar = "#" * int(pct * 2)
     print(f"  {level:<10} {n:>5}  ({pct:.2f}% of scored)  {bar}")
 
 # ── Label breakdown ───────────────────────────────────────────────
 print(f"\n--- Predicted labels ---")
 label_counts = Counter(a.get("label") for a in alerts)
 for label, count in label_counts.most_common():
-    bar = "█" * int(count / len(alerts) * 30) if alerts else ""
+    bar = "#" * int(count / len(alerts) * 30) if alerts else ""
     print(f"  {label:<25} {count:>4}  {bar}")
 
 # ── XGBoost vs AE breakdown ───────────────────────────────────────
@@ -64,7 +64,7 @@ print(f"  Neither (LOW from AE score)    : {neither:>4}")
 # ── TOP 10 most flagged flows ─────────────────────────────────────
 print(f"\n--- Top 10 most flagged flows ---")
 flow_counts = Counter(
-    f"{a.get('src_ip')}:{a.get('src_port')} → {a.get('dst_ip')}:{a.get('dst_port')}"
+    f"{a.get('src_ip')}:{a.get('src_port')} -> {a.get('dst_ip')}:{a.get('dst_port')}"
     for a in alerts
 )
 for flow, count in flow_counts.most_common(10):
@@ -77,7 +77,7 @@ if high_crit:
     for a in high_crit[:20]:     # show up to 20
         ts  = datetime.fromtimestamp(a.get("timestamp", 0)).strftime("%H:%M:%S")
         print(f"  [{ts}] {a.get('level', ''):<10} {a.get('label', ''):<20} "
-              f"{a.get('src_ip')}:{a.get('src_port')} → "
+              f"{a.get('src_ip')}:{a.get('src_port')} -> "
               f"{a.get('dst_ip')}:{a.get('dst_port')} "
               f"({a.get('protocol')})")
         print(f"           XGB={a.get('xgb_class')} ({a.get('xgb_confidence', 0):.3f})  "
