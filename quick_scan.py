@@ -1,7 +1,7 @@
 import socket
 import threading
 
-TARGET = "10.236.234.51"
+TARGET = "10.174.8.44"
 
 def scan_port(ip, port):
     try:
